@@ -1,0 +1,84 @@
+<!-- chat/templates/chat/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8"/>
+        <title>Chat Room</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'feather/css/feather.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/widget.css' %}">
+        <script src="{% static 'jquery/js/jquery-3.4.1.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+    </head>
+<body>
+    <div class="main-body">
+        <div class="page-wrapper">
+            <div class="page-body">
+                <div class="col-lg-12 col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="md-form md-outline">
+                                <label for="client_rfc"><small class="font-weight-bold">Ingresa tu nombre</small></label>
+                                <input type="text" class="form-control " id="name-input" type="text" size="100">      
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="md-form md-outline">
+                            <label for="client_rfc"><small class="font-weight-bold">&nbsp;</small></label>
+                            <button id="name-submit" class="form-control btn btn-success waves-effect waves-ligh">Enviar</button>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        var CSRF_TOKEN = '{{ csrf_token }}'
+        document.querySelector('#name-input').focus();
+        document.querySelector('#name-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#name-submit').click();
+            }
+        };
+
+        document.querySelector('#name-submit').onclick = function(e) {
+            var name = document.querySelector('#name-input').value;
+            var data =  []
+            data.push({
+                "name": "csrfmiddlewaretoken",
+                "value": CSRF_TOKEN
+              });
+            data.push({"name":"name", "value":name});
+
+            $.ajax({
+                "dataType": 'json',
+                "type": "POST",
+                "url": '/chat/',
+                "data": data,
+                "success": function(json) {
+                    if(json.success){
+                        window.location.pathname = '/chat/';  
+                    }else {
+                        alert('Error al actualizar');
+                    }
+                }
+            }); 
+                
+        
+           
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+</body>
+</html>
